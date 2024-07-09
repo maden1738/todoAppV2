@@ -18,5 +18,6 @@ export function authenticate(req: Request, res: Response, next: NextFunction) {
      }
 
      verify(token[1], config.jwt.secret!);
+
      next();
 }

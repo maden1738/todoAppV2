@@ -4,7 +4,8 @@ import { createUser, getUserByEmail } from "./user";
 
 import { sign, verify } from "jsonwebtoken";
 import config from "../config";
-import { decode } from "punycode";
+import { RefreshToken } from "../interface/refreshToken";
+import { createAccessToken } from "../utils/createAccessToken";
 
 export async function signup(body: Pick<User, "name" | "email" | "password">) {
      const password = await bcrypt.hash(body.password, 10);
@@ -39,11 +40,11 @@ export async function login(body: Pick<User, "email" | "password">) {
      };
 
      const accessToken = sign(payload, config.jwt.secret!, {
-          expiresIn: config.jwt.accessTokenExpiryMS,
+          expiresIn: config.jwt.accessTokenExpirySeconds,
      });
 
      const refreshToken = sign(payload, config.jwt.secret!, {
-          expiresIn: config.jwt.refreshTokenExpiryMS,
+          expiresIn: config.jwt.refreshTokenExpirySeconds,
      });
 
      return {
@@ -52,24 +53,15 @@ export async function login(body: Pick<User, "email" | "password">) {
      };
 }
 
-export function refresh(body: { refreshToken: string }) {
+export function refresh(body: RefreshToken) {
      const { refreshToken } = body;
      if (!refreshToken) {
           return {
-               error: "Refresh token doesnt exist",
+               error: "Refresh token doesn't exist",
           };
      }
 
-     const decoded: any = verify(refreshToken, config.jwt.secret!);
-     const payload = {
-          id: decoded.id,
-          name: decoded.name,
-          email: decoded.email,
-     };
+     const accessToken = createAccessToken(refreshToken);
 
-     const accessToken = sign(payload, config.jwt.secret!, {
-          expiresIn: config.jwt.accessTokenExpiryMS,
-     });
-
-     return accessToken;
+     return { accessToken };
 }

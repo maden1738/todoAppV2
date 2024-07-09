@@ -19,5 +19,5 @@ export function createUser(user: Pick<User, "name" | "email" | "password">) {
 }
 
 export function getUserByEmail(email: string) {
-     return users.find(({ email: userEmail }) => userEmail === email); // destructuring and renaming id to userId
+     return users.find(({ email: userEmail }) => userEmail === email); // destructuring and renaming email to userEmail
 }

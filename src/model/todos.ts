@@ -6,39 +6,41 @@ let todos = [
           todo: "Learn React",
           status: "complete",
           dueDate: "2024-08-12",
+          createdBy: "1",
      },
      {
           id: "2",
           todo: "Learn REST APIS",
           status: "incomplete",
           dueDate: "2024-08-20",
+          createdBy: "1",
      },
 ];
 
-export function getTodos() {
-     return todos;
+export function getTodos(userId: string) {
+     return todos.filter((todo) => todo.createdBy === userId);
 }
 
-export function getTodoById(id: string) {
-     return todos.find(({ id: todoId }) => todoId === id); // destructuring and renaming id to userId
+export function getTodoById(id: string, userId: string) {
+     return todos.find(
+          ({ id: todoId, createdBy }) => todoId === id && createdBy === userId
+     );
 }
 
-export function createTodos(todo: Todo) {
-     const newTodo = { id: `${todos.length + 1}`, ...todo };
+export function createTodos(todo: Todo, userId: string) {
+     const newTodo = { id: `${todos.length + 1}`, createdBy: userId, ...todo };
      todos.push(newTodo);
      return newTodo;
 }
 
-export function updateTodo(id: string, todo: Todo) {
+export function updateTodo(id: string, { todo, status, dueDate }: Todo) {
      let updatedValue;
-     todos = todos.map((todoElement) => {
-          if (todoElement.id !== id) {
-               return todoElement;
-          }
-          todoElement.todo = todo.todo;
-          updatedValue = todoElement;
-          return todoElement;
-     });
+
+     todos = todos.map((todoElement) =>
+          todoElement.id !== id
+               ? todoElement
+               : (updatedValue = { ...todoElement, todo, status, dueDate })
+     );
      return updatedValue;
 }
 
