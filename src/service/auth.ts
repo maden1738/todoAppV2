@@ -18,9 +18,7 @@ export async function login(body: Pick<User, "email" | "password">) {
      const existingUser = getUserByEmail(body.email);
 
      if (!existingUser) {
-          return {
-               error: "Incorrect email or password",
-          };
+          return;
      }
 
      const isPasswordValid = await bcrypt.compare(
@@ -29,9 +27,7 @@ export async function login(body: Pick<User, "email" | "password">) {
      );
 
      if (!isPasswordValid) {
-          return {
-               error: "Incorrect email  or password",
-          };
+          return;
      }
 
      const payload = {

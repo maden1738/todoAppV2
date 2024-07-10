@@ -33,13 +33,13 @@ export function createTodos(body: Todo, userId: string) {
      return newTodo;
 }
 
-export function updateTodo(id: string, { todo, status, dueDate }: Todo) {
+export function updateTodo(id: string, todo: Todo) {
      let updatedValue;
 
      todos = todos.map((todoElement) =>
           todoElement.id !== id
                ? todoElement
-               : (updatedValue = { ...todoElement, todo, status, dueDate })
+               : (updatedValue = { ...todoElement, ...todo })
      );
      return updatedValue;
 }

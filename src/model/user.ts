@@ -34,10 +34,7 @@ export function getUserByEmail(email: string) {
      return users.find(({ email: userEmail }) => userEmail === email); // destructuring and renaming email to userEmail
 }
 
-export function updateUser(
-     id: string,
-     { name, email, password, permissions }: User
-) {
+export function updateUser(id: string, user: User) {
      let updatedValue;
 
      users = users.map((userElement) =>
@@ -45,10 +42,7 @@ export function updateUser(
                ? userElement
                : (updatedValue = {
                       ...userElement,
-                      name,
-                      email,
-                      password,
-                      permissions,
+                      ...user,
                  })
      );
      return updatedValue;

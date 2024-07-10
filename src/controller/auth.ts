@@ -19,8 +19,8 @@ export async function login(req: Request, res: Response, next: NextFunction) {
 
      const data = await AuthService.login(body);
 
-     if (data.error) {
-          next(new UnauthenticatedError(data.error));
+     if (!data) {
+          next(new UnauthenticatedError("Invalid Email or Password"));
           return;
      }
 
