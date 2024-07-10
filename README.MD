@@ -1,10 +1,13 @@
-# Todo Apis with auth
-
-Added auth features to CRUD apis of [TodoApp](https://github.com/maden1738/todoApp)
+# Todo App
 
 ## Features
 
-1. Signup route that takes name, email and password
-2. Routes for user login which should take in email and password and return access and refresh tokens
-3. Middleware for authentication using JWT Tokens
-4. Refresh route for refreshing access tokens using refresh tokens
+1. Authorization middleware that allows only Super Admin User to access CRUD routes for users.
+
+2. Each new created user can do CRUD operations on their todo items only.
+
+3. Proper HTTP status code for all response.
+
+4. Error handler global middleware.
+
+5. Loggers for all routes.
