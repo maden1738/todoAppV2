@@ -4,6 +4,9 @@ import HttpStatusCodes from "http-status-codes";
 import { UnauthenticatedError } from "../errors/UnauthenticatedError";
 import { BadRequestError } from "../errors/BadRequestError";
 import { ForbiddenError } from "../errors/ForbiddenError";
+import loggerWithNameSpace from "../utils/logger";
+
+const logger = loggerWithNameSpace("ErrorHandler");
 
 export function notFoundError(req: Request, res: Response) {
      return res.status(HttpStatusCodes.NOT_FOUND).json({
@@ -17,6 +20,10 @@ export function genericErrorHandler(
      res: Response,
      next: NextFunction
 ) {
+     if (error.stack) {
+          logger.error(error.stack);
+     }
+
      if (error instanceof UnauthenticatedError) {
           return res.status(HttpStatusCodes.UNAUTHORIZED).json({
                message: error.message,

@@ -18,7 +18,7 @@ export function authenticate(req: Request, res: Response, next: NextFunction) {
      const token = authorization.split(" ");
 
      if (token.length !== 2 || token[0] !== "Bearer") {
-          next(new UnauthenticatedError("Unauthenticated"));
+          next(new UnauthenticatedError("Bearer Token invalid format"));
           return;
      }
 
@@ -36,7 +36,6 @@ export function authenticate(req: Request, res: Response, next: NextFunction) {
 export function authorize(permission: string) {
      return (req: Request, res: Response, next: NextFunction) => {
           const user = req.user!;
-          console.log(user);
 
           if (!user.permissions.includes(permission)) {
                next(new ForbiddenError("Forbidden Request"));
