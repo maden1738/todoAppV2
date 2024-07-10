@@ -1,5 +1,6 @@
 import { User } from "../interface/user";
 import { PERMISSION } from "../constants/permissions";
+import loggerWithNamespace from "../utils/logger";
 
 let users: User[] = [
      {
@@ -20,21 +21,27 @@ let users: User[] = [
      },
 ];
 
+const logger = loggerWithNamespace("UserModel");
+
 export function getUser() {
+     logger.info("getUser");
      return users;
 }
 
 export function createUser(
      user: Pick<User, "name" | "email" | "password" | "permissions">
 ) {
+     logger.info("createUser");
      users.push({ ...user, id: `${users.length + 1}` });
 }
 
 export function getUserByEmail(email: string) {
+     logger.info("getUserByEmail");
      return users.find(({ email: userEmail }) => userEmail === email); // destructuring and renaming email to userEmail
 }
 
 export function updateUser(id: string, user: User) {
+     logger.info("updateUser");
      let updatedValue;
 
      users = users.map((userElement) =>
@@ -49,9 +56,11 @@ export function updateUser(id: string, user: User) {
 }
 
 export function getUserById(id: string) {
+     logger.info("getUserById");
      return users.find(({ id: userId }) => userId === id);
 }
 
 export function deleteUser(id: string) {
+     logger.info("deleteUser");
      users = users.filter((user) => user.id !== id);
 }

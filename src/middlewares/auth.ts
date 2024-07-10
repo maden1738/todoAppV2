@@ -3,9 +3,11 @@ import { Request } from "../interface/auth";
 import { verify } from "jsonwebtoken";
 import config from "../config";
 import { UnauthenticatedError } from "../errors/UnauthenticatedError";
-import { User } from "../interface/user";
-import { BadRequestError } from "../errors/BadRequestError";
 import { ForbiddenError } from "../errors/ForbiddenError";
+import { User } from "../interface/user";
+import loggerWithNameSpace from "../utils/logger";
+
+const logger = loggerWithNameSpace("AuthMiddleware");
 
 export function authenticate(req: Request, res: Response, next: NextFunction) {
      const { authorization } = req.headers;
@@ -30,6 +32,7 @@ export function authenticate(req: Request, res: Response, next: NextFunction) {
           return;
      }
 
+     logger.info("user authenticated");
      next();
 }
 
@@ -40,7 +43,7 @@ export function authorize(permission: string) {
           if (!user.permissions.includes(permission)) {
                next(new ForbiddenError("Forbidden Request"));
           }
-
+          logger.info("user authorized");
           next();
      };
 }

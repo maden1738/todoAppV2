@@ -1,5 +1,8 @@
 import { verify, sign } from "jsonwebtoken";
 import config from "../config";
+import loggerWithNameSpace from "./logger";
+
+const logger = loggerWithNameSpace("RefreshToken");
 
 export function createAccessToken(refreshToken: string) {
      try {
@@ -7,6 +10,8 @@ export function createAccessToken(refreshToken: string) {
           if (typeof decoded === "string") {
                return;
           }
+
+          logger.info("Valid refresh token");
 
           const payload = {
                id: decoded.id,
