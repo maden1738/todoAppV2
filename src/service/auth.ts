@@ -2,7 +2,7 @@ import { User } from "../interface/user";
 import bcrypt from "bcrypt";
 import { createUser, getUserByEmail } from "./user";
 
-import { sign, verify } from "jsonwebtoken";
+import { sign } from "jsonwebtoken";
 import config from "../config";
 import { RefreshToken } from "../interface/refreshToken";
 import { createAccessToken } from "../utils/createAccessToken";
