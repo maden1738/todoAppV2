@@ -1,23 +1,47 @@
-import { NextFunction, Request, Response } from "express";
+import { NextFunction, Response } from "express";
+import { Request } from "../interface/auth";
 import { verify } from "jsonwebtoken";
 import config from "../config";
+import { UnauthenticatedError } from "../errors/UnauthenticatedError";
+import { User } from "../interface/user";
+import { BadRequestError } from "../errors/BadRequestError";
+import { ForbiddenError } from "../errors/ForbiddenError";
 
 export function authenticate(req: Request, res: Response, next: NextFunction) {
      const { authorization } = req.headers;
 
      if (!authorization) {
-          next(new Error("Unauthennticated"));
+          next(new UnauthenticatedError("Bearer Token not found"));
           return;
      }
 
      const token = authorization.split(" ");
 
      if (token.length !== 2 || token[0] !== "Bearer") {
-          next(new Error("Unauthenticated"));
+          next(new UnauthenticatedError("Unauthenticated"));
           return;
      }
 
-     verify(token[1], config.jwt.secret!);
+     try {
+          const decoded = verify(token[1], config.jwt.secret!) as User;
+          req.user = decoded;
+     } catch (error) {
+          next(new UnauthenticatedError("Unauthenticated"));
+          return;
+     }
 
      next();
+}
+
+export function authorize(permission: string) {
+     return (req: Request, res: Response, next: NextFunction) => {
+          const user = req.user!;
+          console.log(user);
+
+          if (!user.permissions.includes(permission)) {
+               next(new ForbiddenError("Forbidden Request"));
+          }
+
+          next();
+     };
 }

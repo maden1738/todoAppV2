@@ -6,8 +6,11 @@ import { sign } from "jsonwebtoken";
 import config from "../config";
 import { RefreshToken } from "../interface/refreshToken";
 import { createAccessToken } from "../utils/createAccessToken";
+import { permission } from "process";
 
-export async function signup(body: Pick<User, "name" | "email" | "password">) {
+export async function signup(
+     body: Pick<User, "name" | "email" | "password" | "permissions">
+) {
      const password = await bcrypt.hash(body.password, 10);
 
      createUser({ ...body, password });
@@ -37,6 +40,7 @@ export async function login(body: Pick<User, "email" | "password">) {
           id: existingUser.id,
           name: existingUser.name,
           email: existingUser.email,
+          permissions: existingUser.permissions,
      };
 
      const accessToken = sign(payload, config.jwt.secret!, {

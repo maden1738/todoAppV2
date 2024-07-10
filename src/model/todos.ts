@@ -27,8 +27,8 @@ export function getTodoById(id: string, userId: string) {
      );
 }
 
-export function createTodos(todo: Todo, userId: string) {
-     const newTodo = { id: `${todos.length + 1}`, createdBy: userId, ...todo };
+export function createTodos(body: Todo, userId: string) {
+     const newTodo = { id: `${todos.length + 1}`, createdBy: userId, ...body };
      todos.push(newTodo);
      return newTodo;
 }
