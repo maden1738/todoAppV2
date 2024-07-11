@@ -20,9 +20,10 @@ export function getUserById(req: Request, res: Response, next: NextFunction) {
      res.status(HttpStatusCode.OK).json(data);
 }
 
-export function createUser(req: Request, res: Response) {
+export async function createUser(req: Request, res: Response) {
      const { body } = req;
-     UserService.createUser(body);
+
+     await UserService.createUser(body);
 
      res.status(HttpStatusCode.CREATED).json({
           message: "User created Successfully",
