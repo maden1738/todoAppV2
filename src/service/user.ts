@@ -1,6 +1,7 @@
 import * as UserModel from "../model/user";
 import { User } from "../interface/user";
 import loggerWithNameSpace from "../utils/logger";
+import bcrypt from "bcrypt";
 
 const logger = loggerWithNameSpace("UserService");
 
@@ -14,11 +15,13 @@ export function getUserById(id: string) {
      return UserModel.getUserById(id);
 }
 
-export function createUser(
+export async function createUser(
      user: Pick<User, "name" | "email" | "password" | "permissions">
 ) {
      logger.info("createUser");
-     UserModel.createUser(user);
+     const password = await bcrypt.hash(user.password, 10);
+
+     UserModel.createUser({ ...user, password });
 }
 
 export function getUserByEmail(email: string) {

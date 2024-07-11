@@ -17,7 +17,7 @@ let users: User[] = [
           password:
                "$2b$10$N5zpXnpAd9yqwebahVEYHeT2APESXkefOkCLwb3484TLirasXMDqe",
           id: "2",
-          permissions: [],
+          permissions: [PERMISSION.USER],
      },
 ];
 

@@ -5,7 +5,7 @@ let todos = [
      {
           id: "1",
           todo: "Learn React",
-          status: "complete",
+          status: "completed",
           dueDate: "2024-08-12",
           createdBy: "1",
      },

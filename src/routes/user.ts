@@ -8,6 +8,8 @@ import {
 } from "../controller/user";
 import { authenticate, authorize } from "../middlewares/auth";
 import { PERMISSION } from "../constants/permissions";
+import { validateReqBody } from "../middlewares/validator";
+import { createUserBodySchema, updateUserBodySchema } from "../schema/users";
 
 const router = express();
 
@@ -18,8 +20,20 @@ router.get(
      authorize(PERMISSION.SUPER_ADMIN),
      getUserById
 );
-router.post("/", authenticate, authorize(PERMISSION.SUPER_ADMIN), createUser);
-router.put("/:id", authenticate, authorize(PERMISSION.SUPER_ADMIN), updateUser);
+router.post(
+     "/",
+     validateReqBody(createUserBodySchema),
+     authenticate,
+     authorize(PERMISSION.SUPER_ADMIN),
+     createUser
+);
+router.put(
+     "/:id",
+     validateReqBody(updateUserBodySchema),
+     authenticate,
+     authorize(PERMISSION.SUPER_ADMIN),
+     updateUser
+);
 router.delete(
      "/:id",
      authenticate,
