@@ -49,6 +49,7 @@ export function deleteUser(req: Request, res: Response, next: NextFunction) {
 
      if (data === null) {
           next(new BadRequestError(`User with id: ${id} not found`));
+          return;
      }
 
      res.status(HttpStatusCode.OK).json({
