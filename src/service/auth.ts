@@ -14,8 +14,7 @@ export async function signup(
      body: Pick<User, "name" | "email" | "password" | "permissions">
 ) {
      logger.info("Signup");
-     const password = await bcrypt.hash(body.password, 10);
-     createUser({ ...body, password });
+     createUser(body);
 }
 
 export async function login(body: Pick<User, "email" | "password">) {
