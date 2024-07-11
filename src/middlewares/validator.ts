@@ -20,3 +20,18 @@ export function validateReqBody(schema: Schema) {
           next();
      };
 }
+
+export function validateReqQuery(schema: Schema) {
+     return (req: Request, res: Response, next: NextFunction) => {
+          const { error, value } = schema.validate(req.query);
+
+          if (error) {
+               next(new BadRequestError(error.message));
+               return;
+          }
+
+          req.query = value;
+
+          next();
+     };
+}

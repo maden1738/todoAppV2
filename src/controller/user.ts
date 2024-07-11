@@ -2,9 +2,14 @@ import { NextFunction, Request, Response } from "express";
 import * as UserService from "../service/user";
 import HttpStatusCode from "http-status-codes";
 import { BadRequestError } from "../errors/BadRequestError";
+import { GetUserQuery } from "../interface/user";
 
-export function getUser(req: Request, res: Response) {
-     const data = UserService.getUser();
+export function getUser(
+     req: Request<any, any, any, GetUserQuery>,
+     res: Response
+) {
+     const { query } = req;
+     const data = UserService.getUser(query);
      res.status(HttpStatusCode.OK).json(data);
 }
 
@@ -29,11 +34,15 @@ export async function createUser(req: Request, res: Response) {
      });
 }
 
-export function updateUser(req: Request, res: Response, next: NextFunction) {
+export async function updateUser(
+     req: Request,
+     res: Response,
+     next: NextFunction
+) {
      const { body } = req;
      const { id } = req.params;
 
-     const data = UserService.updateUser(id, body);
+     const data = await UserService.updateUser(id, body);
 
      if (!data) {
           next(new BadRequestError(`User with id: ${id} not found`));

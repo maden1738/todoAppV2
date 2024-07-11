@@ -1,7 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import * as AuthService from "../service/auth";
 import HttpStatusCode from "http-status-codes";
-import { nextTick } from "process";
 import { UnauthenticatedError } from "../errors/UnauthenticatedError";
 
 export async function signup(req: Request, res: Response) {

@@ -89,3 +89,9 @@ export const updateUserBodySchema = Joi.object({
                stripUnknown: true,
           }),
 });
+
+export const GetUserQuerySchema = Joi.object({
+     q: Joi.string().optional(),
+}).options({
+     stripUnknown: true,
+});

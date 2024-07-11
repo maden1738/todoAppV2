@@ -5,3 +5,7 @@ export interface User {
      password: string;
      permissions: string[];
 }
+
+export interface GetUserQuery {
+     q?: string;
+}

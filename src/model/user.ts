@@ -1,4 +1,4 @@
-import { User } from "../interface/user";
+import { GetUserQuery, User } from "../interface/user";
 import { PERMISSION } from "../constants/permissions";
 import loggerWithNamespace from "../utils/logger";
 
@@ -23,8 +23,13 @@ let users: User[] = [
 
 const logger = loggerWithNamespace("UserModel");
 
-export function getUser() {
+export function getUser(query: GetUserQuery) {
      logger.info("getUser");
+     const { q } = query;
+     if (q) {
+          return users.filter(({ name }) => name.includes(q));
+     }
+
      return users;
 }
 

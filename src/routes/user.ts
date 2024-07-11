@@ -8,12 +8,22 @@ import {
 } from "../controller/user";
 import { authenticate, authorize } from "../middlewares/auth";
 import { PERMISSION } from "../constants/permissions";
-import { validateReqBody } from "../middlewares/validator";
-import { createUserBodySchema, updateUserBodySchema } from "../schema/users";
+import { validateReqBody, validateReqQuery } from "../middlewares/validator";
+import {
+     createUserBodySchema,
+     GetUserQuerySchema,
+     updateUserBodySchema,
+} from "../schema/users";
 
 const router = express();
 
-router.get("/", authenticate, authorize(PERMISSION.SUPER_ADMIN), getUser);
+router.get(
+     "/",
+     validateReqQuery(GetUserQuerySchema),
+     authenticate,
+     authorize(PERMISSION.SUPER_ADMIN),
+     getUser
+);
 router.get(
      "/:id",
      authenticate,
