@@ -23,6 +23,7 @@ export function validateReqBody(schema: Schema) {
 
 export function validateReqQuery(schema: Schema) {
      return (req: Request, res: Response, next: NextFunction) => {
+          logger.info("validateReqQuery");
           const { error, value } = schema.validate(req.query);
 
           if (error) {

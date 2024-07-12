@@ -19,9 +19,16 @@ export async function createUser(
      user: Pick<User, "name" | "email" | "password" | "permissions">
 ) {
      logger.info("createUser");
+
+     const data = getUserByEmail(user.email);
+
+     if (data) {
+          return;
+     }
+
      const password = await bcrypt.hash(user.password, 10);
 
-     UserModel.createUser({ ...user, password });
+     return UserModel.createUser({ ...user, password });
 }
 
 export function getUserByEmail(email: string) {

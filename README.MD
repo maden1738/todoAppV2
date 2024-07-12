@@ -11,3 +11,5 @@
 4. Error handler global middleware.
 
 5. Loggers for all routes.
+
+6. Data validation using JOI

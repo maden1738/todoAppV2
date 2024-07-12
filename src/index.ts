@@ -5,6 +5,7 @@ import { genericErrorHandler, notFoundError } from "./middlewares/errorHandler";
 import { requestLogger } from "./middlewares/logger";
 import rateLimiter from "express-rate-limit";
 import helmet from "helmet";
+import cors from "cors";
 
 const app = express();
 
@@ -17,6 +18,19 @@ const limiter = rateLimiter({
 app.use(helmet());
 
 app.use(limiter);
+
+const allowedOrigins = ["https://www.test.com"];
+app.use(
+     cors({
+          origin: (origin, callback) => {
+               if (!origin || allowedOrigins.includes(origin)) {
+                    callback(null, origin);
+               } else {
+                    callback(new Error("not allowed"));
+               }
+          },
+     })
+);
 
 app.use(express.json());
 app.use(requestLogger);

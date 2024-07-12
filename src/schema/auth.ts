@@ -13,6 +13,6 @@ export const LoginSchema = Joi.object({
 
 export const RefreshSchema = Joi.object({
      refreshToken: Joi.string().required().messages({
-          "any.required": "RefreshToken is required",
+          "any.required": "refreshToken is required",
      }),
 });

@@ -3,11 +3,11 @@ import { PERMISSION } from "../constants/permissions";
 
 export const createUserBodySchema = Joi.object({
      name: Joi.string().required().messages({
-          "any.required": "Name is required",
+          "any.required": "name is required",
      }),
 
      email: Joi.string().email().required().messages({
-          "any.required": "Email is required",
+          "any.required": "email is required",
           "string.email": "Email must be in valid format",
      }),
 

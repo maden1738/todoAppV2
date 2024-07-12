@@ -25,12 +25,22 @@ export function getUserById(req: Request, res: Response, next: NextFunction) {
      res.status(HttpStatusCode.OK).json(data);
 }
 
-export async function createUser(req: Request, res: Response) {
+export async function createUser(
+     req: Request,
+     res: Response,
+     next: NextFunction
+) {
      const { body } = req;
-     await UserService.createUser(body);
+     const data = await UserService.createUser(body);
+
+     if (!data) {
+          next(new BadRequestError("User with that email already exists"));
+          return;
+     }
 
      res.status(HttpStatusCode.CREATED).json({
           message: "User created Successfully",
+          data,
      });
 }
 

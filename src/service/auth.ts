@@ -14,7 +14,7 @@ export async function signup(
      body: Pick<User, "name" | "email" | "password" | "permissions">
 ) {
      logger.info("Signup");
-     createUser(body);
+     return createUser(body);
 }
 
 export async function login(body: Pick<User, "email" | "password">) {

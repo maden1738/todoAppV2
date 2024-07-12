@@ -37,7 +37,10 @@ export function createUser(
      user: Pick<User, "name" | "email" | "password" | "permissions">
 ) {
      logger.info("createUser");
-     users.push({ ...user, id: `${users.length + 1}` });
+     const newUser = { ...user, id: `${users.length + 1}` };
+     users.push(newUser);
+
+     return newUser;
 }
 
 export function getUserByEmail(email: string) {

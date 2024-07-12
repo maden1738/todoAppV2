@@ -2,14 +2,21 @@ import { NextFunction, Request, Response } from "express";
 import * as AuthService from "../service/auth";
 import HttpStatusCode from "http-status-codes";
 import { UnauthenticatedError } from "../errors/UnauthenticatedError";
+import { BadRequestError } from "../errors/BadRequestError";
 
-export async function signup(req: Request, res: Response) {
+export async function signup(req: Request, res: Response, next: NextFunction) {
      const { body } = req;
 
-     await AuthService.signup(body);
+     const data = await AuthService.signup(body);
+
+     if (!data) {
+          next(new BadRequestError("User with that email already exists"));
+          return;
+     }
 
      res.status(HttpStatusCode.CREATED).json({
           message: "user created successfully",
+          data,
      });
 }
 
