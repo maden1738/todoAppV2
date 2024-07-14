@@ -13,7 +13,6 @@ import bcrypt from "bcrypt";
 import { GetUserQuery, User } from "../../../interface/user";
 import { users } from "../../../model/user";
 import { describe } from "mocha";
-import { response } from "express";
 
 describe("User Service Test Suite", () => {
      describe("getUer", () => {
@@ -229,7 +228,6 @@ describe("User Service Test Suite", () => {
           let UserModelGetUserByIdStub: sinon.SinonStub;
           let UserModelUpdateUserStub: sinon.SinonStub;
           let bcryptHashStub: sinon.SinonStub;
-          let loggerInfoStub: sinon.SinonStub;
 
           beforeEach(() => {
                UserModelGetUserByIdStub = sinon.stub(UserModel, "getUserById");
