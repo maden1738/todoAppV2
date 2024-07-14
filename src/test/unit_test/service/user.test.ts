@@ -204,14 +204,20 @@ describe("User Service Test Suite", () => {
 
           it("should not create a user when email already exists", async () => {
                const user = {
+                    id: "1",
                     name: "test",
                     email: "test@t.com",
                     password: "test1234",
-                    id: "1",
                     permissions: [],
                };
 
-               userModelGetUserByEmailStub.returns({ ...user, id: "2" });
+               userModelGetUserByEmailStub.returns({
+                    id: "2",
+                    name: "test2",
+                    email: "test@t.com",
+                    password: "423423432",
+                    permissions: [],
+               });
 
                const response = await createUser(user);
 
