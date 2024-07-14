@@ -2,7 +2,7 @@ import { GetUserQuery, User } from "../interface/user";
 import { PERMISSION } from "../constants/permissions";
 import loggerWithNamespace from "../utils/logger";
 
-let users: User[] = [
+export let users: User[] = [
      {
           name: "user1",
           email: "user1@g.com",
@@ -26,6 +26,7 @@ const logger = loggerWithNamespace("UserModel");
 export function getUser(query: GetUserQuery) {
      logger.info("getUser");
      const { q } = query;
+     console.log(q);
      if (q) {
           return users.filter(({ name }) => name.includes(q));
      }

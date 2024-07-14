@@ -21,14 +21,12 @@ export async function createUser(
      logger.info("createUser");
 
      const data = UserModel.getUserByEmail(user.email);
-     console.log(data);
 
      if (data) {
           return;
      }
 
      const password = await bcrypt.hash(user.password, 10);
-     console.log(password);
 
      return UserModel.createUser({ ...user, password });
 }
