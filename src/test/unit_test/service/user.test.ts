@@ -1,14 +1,16 @@
-import Sinon from "sinon";
+import sinon from "sinon";
 import * as UserModel from "../../../model/user";
 import expect from "expect";
-import { getUserById } from "../../../service/user";
+import { getUserById, createUser } from "../../../service/user";
+import bcrypt from "bcrypt";
+import * as UserService from "../../../service/user";
 
 describe("User Service Test Suite", () => {
      describe("getUserById", () => {
-          let userModelGetUserByIdStub: Sinon.SinonStub;
+          let userModelGetUserByIdStub: sinon.SinonStub;
 
           beforeEach(() => {
-               userModelGetUserByIdStub = Sinon.stub(UserModel, "getUserById");
+               userModelGetUserByIdStub = sinon.stub(UserModel, "getUserById");
           });
 
           afterEach(() => {
@@ -37,6 +39,50 @@ describe("User Service Test Suite", () => {
                const response = getUserById("1");
 
                expect(response).toStrictEqual(user);
+          });
+     });
+
+     describe("createUser", () => {
+          let bcryptHashStub: sinon.SinonStub;
+          let getUserByEmailStub: sinon.SinonStub;
+          let userModelCreateUserStub: sinon.SinonStub;
+
+          beforeEach(() => {
+               bcryptHashStub = sinon.stub(bcrypt, "hash");
+               getUserByEmailStub = sinon.stub(UserService, "getUserByEmail");
+               userModelCreateUserStub = sinon.stub(UserModel, "createUser");
+          });
+
+          afterEach(() => {
+               bcryptHashStub.restore();
+               getUserByEmailStub.restore();
+               userModelCreateUserStub.restore();
+          });
+
+          it("should create new user", async () => {
+               const user = {
+                    name: "test",
+                    email: "test@t.com",
+                    password: "test1234",
+                    id: "1",
+                    permissions: [],
+               };
+
+               console.log(UserService);
+
+               bcryptHashStub.resolves("hashedPassword");
+               getUserByEmailStub.returns(true);
+               userModelCreateUserStub.returns({
+                    ...user,
+                    password: "hashedPassword",
+               });
+
+               const response = await createUser(user);
+
+               expect(response).toStrictEqual({
+                    ...user,
+                    password: "hashedPassword",
+               });
           });
      });
 });

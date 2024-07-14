@@ -56,6 +56,7 @@ export async function updateUser(
 
      if (!data) {
           next(new BadRequestError(`User with id: ${id} not found`));
+          return;
      }
 
      res.status(HttpStatusCode.OK).json(data);
