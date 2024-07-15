@@ -106,7 +106,7 @@ describe("Auth Api Test Suite", () => {
      });
 
      describe("Refresh", async () => {
-          it.only("should return fresh access token", async () => {
+          it("should return fresh access token", async () => {
                const refreshBody = {
                     refreshToken: test.refreshToken,
                };
@@ -119,7 +119,7 @@ describe("Auth Api Test Suite", () => {
                expect(response.body.accessToken).toBeDefined();
           });
 
-          it.only("should return 401 Unauthorized if refresh token is incorrect", async () => {
+          it("should return 401 Unauthorized if refresh token is incorrect", async () => {
                const refreshBody = {
                     refreshToken: "incorrectToken",
                };

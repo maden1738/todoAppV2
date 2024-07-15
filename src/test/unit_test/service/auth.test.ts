@@ -8,7 +8,7 @@ import jwt from "jsonwebtoken";
 
 describe("Auth Service Test Suite", () => {
      describe("signup", () => {
-          it.only("should return created user", async () => {
+          it("should return created user", async () => {
                const user = {
                     name: "test",
                     email: "test@t.com",
@@ -44,7 +44,7 @@ describe("Auth Service Test Suite", () => {
                sinon.restore();
           });
 
-          it.only("should return tokens for valid credentials", async () => {
+          it("should return tokens for valid credentials", async () => {
                const loginData = {
                     email: "test@t.com",
                     password: "password",
@@ -81,7 +81,7 @@ describe("Auth Service Test Suite", () => {
                });
           });
 
-          it.only("should return undefined for non-existent user", async () => {
+          it("should return undefined for non-existent user", async () => {
                const loginData = {
                     email: "wrong@test.com",
                     password: "password",
@@ -99,7 +99,7 @@ describe("Auth Service Test Suite", () => {
                expect(result).toBe(undefined);
           });
 
-          it.only("should return undefined for invalid password", async () => {
+          it("should return undefined for invalid password", async () => {
                const loginData = {
                     email: "test@t.com",
                     password: "wrongpassword",

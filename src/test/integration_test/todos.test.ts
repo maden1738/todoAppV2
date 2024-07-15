@@ -178,7 +178,7 @@ describe("Service Integration Test Suite", () => {
 
                // checking if todo is deleted
                const todo = todos.find(({ id: todoId }) => todoId === id);
-               expect(todo).toBeUndefined;
+               expect(todo).toBeUndefined();
           });
 
           it("should return 400 Bad Request if id is not found", async () => {
