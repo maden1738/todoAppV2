@@ -4,7 +4,7 @@ import router from "../../routes";
 import expect from "expect";
 import HttpStatusCodes from "http-status-codes";
 import config from "../../config";
-import { JwtPayload, verify } from "jsonwebtoken";
+import { verify } from "jsonwebtoken";
 import {
      genericErrorHandler,
      notFoundError,

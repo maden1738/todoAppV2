@@ -12,6 +12,7 @@ const config = {
      test: {
           accessToken: process.env.TEST_ACCESS_TOKEN,
           accessTokenSuperAdmin: process.env.TEST_ACCESS_TOKEN_SUPER_ADMIN,
+          refreshToken: process.env.TEST_REFRESH_TOKEN,
      },
 };
 

@@ -5,18 +5,7 @@ export const createTodosBodySchema = Joi.object({
           "any.required": "Todo  is required",
      }),
 
-     status: Joi.string()
-          .required()
-          .default("incomplete")
-          .messages({
-               "status.invalid":
-                    "Status can only be either 'completed' or 'incomplete'",
-          })
-          .custom((value, helpers) => {
-               if (value !== "incomplete" && value !== "completed") {
-                    return helpers.error("status.invalid");
-               }
-          }),
+     status: Joi.string().required(),
 
      dueDate: Joi.date()
           .optional()
