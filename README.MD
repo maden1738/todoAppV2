@@ -13,3 +13,7 @@
 5. Loggers for all routes.
 
 6. Data validation using JOI
+
+7. Unit Testing for all the services
+
+8. Integration Test for all routes
