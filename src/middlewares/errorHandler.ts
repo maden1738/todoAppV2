@@ -28,11 +28,13 @@ export function genericErrorHandler(
           return res.status(HttpStatusCodes.UNAUTHORIZED).json({
                message: error.message,
           });
-     } else if (error instanceof BadRequestError) {
+     }
+     if (error instanceof BadRequestError) {
           return res.status(HttpStatusCodes.BAD_REQUEST).json({
                message: error.message,
           });
-     } else if (error instanceof ForbiddenError) {
+     }
+     if (error instanceof ForbiddenError) {
           return res.status(HttpStatusCodes.FORBIDDEN).json({
                message: error.message,
           });
