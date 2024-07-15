@@ -1,7 +1,7 @@
 import { Todo } from "../interface/todos";
 import loggerWithNamespace from "../utils/logger";
 
-let todos = [
+export let todos = [
      {
           id: "1",
           todo: "Learn React",
@@ -15,6 +15,13 @@ let todos = [
           status: "incomplete",
           dueDate: "2024-08-20",
           createdBy: "1",
+     },
+     {
+          id: "3",
+          todo: "Learn Sleeping",
+          status: "incomplete",
+          dueDate: "2024-08-20",
+          createdBy: "3",
      },
 ];
 

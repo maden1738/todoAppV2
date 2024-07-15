@@ -6,7 +6,7 @@ export const createTodosBodySchema = Joi.object({
      }),
 
      status: Joi.string()
-          .optional()
+          .required()
           .default("incomplete")
           .messages({
                "status.invalid":

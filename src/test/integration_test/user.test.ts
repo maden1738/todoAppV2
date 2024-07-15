@@ -3,7 +3,6 @@ import request from "supertest";
 import router from "../../routes";
 import expect from "expect";
 import HttpStatusCodes from "http-status-codes";
-import * as UsersModel from "../.././model/user";
 import config from "../../config";
 import bcrypt from "bcrypt";
 import { users } from "../.././model/user";
@@ -31,7 +30,7 @@ describe("User Integration Test Suite", () => {
      // });
 
      describe("createUser Api Test", () => {
-          it.only("should create new user", async () => {
+          it("should create new user", async () => {
                const userBody = {
                     name: "test",
                     email: "test@test.com",
@@ -67,7 +66,7 @@ describe("User Integration Test Suite", () => {
                expect(addedUser.email).toBe(userBody.email);
           });
 
-          it.only("should return 400 if user with email already exists", async () => {
+          it("should return 400 if user with email already exists", async () => {
                const existingEmail = users[0].email;
 
                const userBody = {
@@ -90,10 +89,37 @@ describe("User Integration Test Suite", () => {
                     "User with that email already exists"
                );
           });
+
+          it("should return 401 unauthorized if not authenticated", async () => {
+               const userBody = {
+                    name: "test",
+                    email: "test@t.com",
+                    password: "Test1234*",
+                    permissions: [""],
+               };
+               await request(app)
+                    .post("/user")
+                    .send(userBody)
+                    .expect(HttpStatusCodes.UNAUTHORIZED);
+          });
+
+          it("should return 403 forbidden if not authorized", async () => {
+               const userBody = {
+                    name: "test",
+                    email: "test@t.com",
+                    password: "Test1234*",
+                    permissions: [""],
+               };
+               await request(app)
+                    .post("/user")
+                    .set("Authorization", `Bearer ${test.accessToken}`)
+                    .send(userBody)
+                    .expect(HttpStatusCodes.FORBIDDEN);
+          });
      });
 
      describe("getUser", () => {
-          it.only("should return all user when no query is provided", async () => {
+          it("should return all user when no query is provided", async () => {
                const response = await request(app)
                     .get("/user")
                     .set(
@@ -105,7 +131,7 @@ describe("User Integration Test Suite", () => {
                expect(response.body).toStrictEqual(users);
           });
 
-          it.only("should return users based on query", async () => {
+          it("should return users based on query", async () => {
                const query = "user";
                const response = await request(app)
                     .get(`/user?q=${query}`)
@@ -122,7 +148,7 @@ describe("User Integration Test Suite", () => {
                expect(response.body).toStrictEqual(expectedOutput);
           });
 
-          it.only("should return empty array if query doesnt match", async () => {
+          it("should return empty array if query doesnt match", async () => {
                const query = "idontexist";
                const response = await request(app)
                     .get(`/user?q=${query}`)
@@ -134,10 +160,23 @@ describe("User Integration Test Suite", () => {
 
                expect(response.body).toStrictEqual([]);
           });
+
+          it("should return 401 unauthorized if not authenticated", async () => {
+               await request(app)
+                    .get("/user")
+                    .expect(HttpStatusCodes.UNAUTHORIZED);
+          });
+
+          it("should return 403 forbidden if not authorized", async () => {
+               await request(app)
+                    .get("/user")
+                    .set("Authorization", `Bearer ${test.accessToken}`)
+                    .expect(HttpStatusCodes.FORBIDDEN);
+          });
      });
 
      describe("getUserById", () => {
-          it.only("should return user of the provided id", async () => {
+          it("should return user of the provided id", async () => {
                const id = "1";
                const response = await request(app)
                     .get(`/user/${id}`)
@@ -154,7 +193,7 @@ describe("User Integration Test Suite", () => {
                expect(response.body).toStrictEqual(expectedOutput);
           });
 
-          it.only("should be bad request error if id is incorrect ", async () => {
+          it("should be bad request error if id is incorrect ", async () => {
                const id = "99999";
                const response = await request(app)
                     .get(`/user/${id}`)
@@ -168,15 +207,31 @@ describe("User Integration Test Suite", () => {
                     `User with id: ${id} not found`
                );
           });
+          it("should return 401 unauthorized if not authenticated", async () => {
+               await request(app)
+                    .get("/user/1")
+                    .expect(HttpStatusCodes.UNAUTHORIZED);
+          });
+
+          it("should return 403 forbidden if not authorized", async () => {
+               await request(app)
+                    .get("/user/1")
+                    .set("Authorization", `Bearer ${test.accessToken}`)
+                    .expect(HttpStatusCodes.FORBIDDEN);
+          });
      });
 
      describe("updateUser", () => {
-          it.only("should update the user's data (no password change)", async () => {
+          it("should update the user's data (no password change)", async () => {
                const id = "1";
                const userBody = {
                     name: "test",
                     email: "test@test.com",
                };
+
+               const dataToBeUpdated = users.find(
+                    ({ id: userId }) => userId === id
+               );
                const response = await request(app)
                     .put(`/user/${id}`)
                     .set(
@@ -186,15 +241,12 @@ describe("User Integration Test Suite", () => {
                     .send(userBody)
                     .expect(HttpStatusCodes.OK);
 
-               const dataToBeUpdated = users.find(
-                    ({ id: userId }) => userId === id
-               );
                const expectedOutput = { ...dataToBeUpdated, ...userBody };
 
                expect(response.body).toStrictEqual(expectedOutput);
           });
 
-          it.only("should update the user's data (password change)", async () => {
+          it("should update the user's data (password change)", async () => {
                const id = "1";
                const userBody = {
                     name: "test",
@@ -210,10 +262,6 @@ describe("User Integration Test Suite", () => {
                     .send(userBody)
                     .expect(HttpStatusCodes.OK);
 
-               const dataToBeUpdated = users.find(
-                    ({ id: userId }) => userId === id
-               );
-
                const isPasswordCorrect = await bcrypt.compare(
                     userBody.password,
                     response.body.password
@@ -222,7 +270,7 @@ describe("User Integration Test Suite", () => {
                expect(isPasswordCorrect).toBe(true);
           });
 
-          it.only("should be bad request error if id is incorrect ", async () => {
+          it("should be bad request error if id is incorrect ", async () => {
                const id = "99999";
                const userBody = {
                     name: "test",
@@ -242,10 +290,37 @@ describe("User Integration Test Suite", () => {
                     `User with id: ${id} not found`
                );
           });
+
+          it("should return 401 unauthorized if not authenticated", async () => {
+               const userBody = {
+                    name: "test",
+                    email: "test@t.com",
+                    password: "Test1234*",
+                    permissions: [""],
+               };
+               await request(app)
+                    .put("/user/1")
+                    .send(userBody)
+                    .expect(HttpStatusCodes.UNAUTHORIZED);
+          });
+
+          it("should return 403 forbidden if not authorized", async () => {
+               const userBody = {
+                    name: "test",
+                    email: "test@t.com",
+                    password: "Test1234*",
+                    permissions: [""],
+               };
+               await request(app)
+                    .put("/user/1")
+                    .set("Authorization", `Bearer ${test.accessToken}`)
+                    .send(userBody)
+                    .expect(HttpStatusCodes.FORBIDDEN);
+          });
      });
 
      describe("deleteUser", () => {
-          it.only("should delete the user", async () => {
+          it("should delete the user", async () => {
                const id = "1";
                const response = await request(app)
                     .delete(`/user/${id}`)
@@ -259,12 +334,12 @@ describe("User Integration Test Suite", () => {
                     `User with id: ${id} deleted`
                );
 
-               // checking if user is added to usersArr
+               // checking if user is deleted
                const user = users.find((user) => user.id === id);
                expect(user).toBeUndefined;
           });
 
-          it.only("should return bad request error if id is incorrect", async () => {
+          it("should return bad request error if id is incorrect", async () => {
                const id = "99999";
 
                const response = await request(app)
@@ -278,6 +353,19 @@ describe("User Integration Test Suite", () => {
                expect(response.body.message).toBe(
                     `User with id: ${id} not found`
                );
+          });
+
+          it("should return 401 unauthorized if not authenticated", async () => {
+               await request(app)
+                    .delete("/user/1")
+                    .expect(HttpStatusCodes.UNAUTHORIZED);
+          });
+
+          it("should return 403 forbidden if not authorized", async () => {
+               await request(app)
+                    .delete("/user/1")
+                    .set("Authorization", `Bearer ${test.accessToken}`)
+                    .expect(HttpStatusCodes.FORBIDDEN);
           });
      });
 });
