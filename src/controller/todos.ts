@@ -1,17 +1,17 @@
 import { NextFunction, Response } from "express";
-import { Request } from "../interface/auth";
+import { IRequest } from "../interface/auth";
 import * as TodosService from "../service/todos";
 import { BadRequestError } from "../errors/BadRequestError";
 import HttpStatusCode from "http-status-codes";
 
-export function getTodo(req: Request, res: Response) {
+export function getTodo(req: IRequest, res: Response) {
      const userId = req.user?.id!;
      const data = TodosService.getTodos(userId);
 
      res.status(HttpStatusCode.OK).json({ data });
 }
 
-export function getTodoById(req: Request, res: Response, next: NextFunction) {
+export function getTodoById(req: IRequest, res: Response, next: NextFunction) {
      const userId = req.user?.id!;
      const { id } = req.params;
 
@@ -24,7 +24,7 @@ export function getTodoById(req: Request, res: Response, next: NextFunction) {
      res.status(HttpStatusCode.OK).json(data);
 }
 
-export function createTodos(req: Request, res: Response) {
+export function createTodos(req: IRequest, res: Response) {
      const userId = req.user?.id!;
      const { body } = req;
 
@@ -36,7 +36,7 @@ export function createTodos(req: Request, res: Response) {
      });
 }
 
-export function updateTodo(req: Request, res: Response, next: NextFunction) {
+export function updateTodo(req: IRequest, res: Response, next: NextFunction) {
      const userId = req.user?.id!;
      const { id } = req.params;
      const { body } = req;
@@ -51,7 +51,7 @@ export function updateTodo(req: Request, res: Response, next: NextFunction) {
      res.status(HttpStatusCode.OK).json(data);
 }
 
-export function deleteTodo(req: Request, res: Response, next: NextFunction) {
+export function deleteTodo(req: IRequest, res: Response, next: NextFunction) {
      const userId = req.user?.id!;
      const { id } = req.params;
 

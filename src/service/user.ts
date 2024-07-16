@@ -16,7 +16,8 @@ export function getUserById(id: string) {
 }
 
 export async function createUser(
-     user: Pick<User, "name" | "email" | "password" | "permissions">
+     user: Pick<User, "name" | "email" | "password" | "permission">,
+     createdBy: string | null
 ) {
      logger.info("createUser");
 
@@ -28,7 +29,7 @@ export async function createUser(
 
      const password = await bcrypt.hash(user.password, 10);
 
-     return UserModel.createUser({ ...user, password });
+     return await UserModel.UserModel.create({ ...user, password }, createdBy);
 }
 
 export function getUserByEmail(email: string) {

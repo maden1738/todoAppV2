@@ -39,8 +39,8 @@ export const createUserBodySchema = Joi.object({
                return value;
           }),
 
-     permissions: Joi.array().optional().default([PERMISSION.USER]).messages({
-          "array.base": "Permissions must be  an array ",
+     permission: Joi.string().optional().default(PERMISSION.USER).messages({
+          "string.base": "Permissions must be  string ",
      }),
 }).options({
      stripUnknown: true,

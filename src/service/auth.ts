@@ -11,10 +11,10 @@ import loggerWithNameSpace from "../utils/logger";
 const logger = loggerWithNameSpace("AuthService");
 
 export async function signup(
-     body: Pick<User, "name" | "email" | "password" | "permissions">
+     body: Pick<User, "name" | "email" | "password" | "permission">
 ) {
      logger.info("Signup");
-     return createUser(body);
+     return createUser(body, null);
 }
 
 export async function login(body: Pick<User, "email" | "password">) {
@@ -40,7 +40,7 @@ export async function login(body: Pick<User, "email" | "password">) {
           id: existingUser.id,
           name: existingUser.name,
           email: existingUser.email,
-          permissions: existingUser.permissions,
+          permissions: existingUser.permission,
      };
 
      const accessToken = sign(payload, config.jwt.secret!, {

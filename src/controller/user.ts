@@ -1,4 +1,5 @@
-import { NextFunction, Request, Response } from "express";
+import { NextFunction, Response, Request } from "express";
+import { IRequest } from "../interface/auth";
 import * as UserService from "../service/user";
 import HttpStatusCode from "http-status-codes";
 import { BadRequestError } from "../errors/BadRequestError";
@@ -26,12 +27,12 @@ export function getUserById(req: Request, res: Response, next: NextFunction) {
 }
 
 export async function createUser(
-     req: Request,
+     req: IRequest,
      res: Response,
      next: NextFunction
 ) {
      const { body } = req;
-     const data = await UserService.createUser(body);
+     const data = await UserService.createUser(body, req.user.id);
 
      if (!data) {
           next(new BadRequestError("User with that email already exists"));
@@ -45,7 +46,7 @@ export async function createUser(
 }
 
 export async function updateUser(
-     req: Request,
+     req: IRequest,
      res: Response,
      next: NextFunction
 ) {

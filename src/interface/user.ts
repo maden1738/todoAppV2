@@ -3,9 +3,11 @@ export interface User {
      name: string;
      email: string;
      password: string;
-     permissions: string[];
+     permission: string;
 }
 
 export interface GetUserQuery {
      q?: string;
+     size?: number;
+     page?: number;
 }

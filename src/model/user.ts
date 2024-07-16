@@ -1,6 +1,55 @@
 import { GetUserQuery, User } from "../interface/user";
 import { PERMISSION } from "../constants/permissions";
 import loggerWithNamespace from "../utils/logger";
+import { BaseModel } from "./base";
+import { permission } from "process";
+
+const logger = loggerWithNamespace("UserModel");
+
+export class UserModel extends BaseModel {
+     static async create(
+          user: Pick<User, "name" | "email" | "password" | "permission">,
+          createdBy: string | null
+     ) {
+          const userToCreate = {
+               name: user.name,
+               email: user.email,
+               password: user.password,
+               createdBy: +createdBy,
+          };
+
+          await this.queryBuilder().insert(userToCreate).table("users");
+          const userId = await this.queryBuilder()
+               .select("id")
+               .table("users")
+               .where({
+                    email: user.email,
+               })
+               .first();
+          console.log(user.permission);
+
+          await this.queryBuilder()
+               .insert({
+                    userId: userId.id,
+                    permission: user.permission,
+               })
+               .table("permissions");
+
+          return await this.queryBuilder()
+               .table("users")
+               .join("permissions", "users.id", "=", "permissions.userId")
+               .select(
+                    "users.id",
+                    "name",
+                    "email",
+                    "password",
+                    "permission",
+                    "users.createdBy"
+               )
+               .where("users.id", userId.id)
+               .first();
+     }
+}
 
 export let users: User[] = [
      {
@@ -9,7 +58,7 @@ export let users: User[] = [
           password:
                "$2b$10$N5zpXnpAd9yqwebahVEYHeT2APESXkefOkCLwb3484TLirasXMDqe",
           id: "1",
-          permissions: [PERMISSION.SUPER_ADMIN],
+          permission: PERMISSION.SUPER_ADMIN,
      },
      {
           name: "user2",
@@ -17,11 +66,9 @@ export let users: User[] = [
           password:
                "$2b$10$N5zpXnpAd9yqwebahVEYHeT2APESXkefOkCLwb3484TLirasXMDqe",
           id: "2",
-          permissions: [PERMISSION.USER],
+          permission: PERMISSION.USER,
      },
 ];
-
-const logger = loggerWithNamespace("UserModel");
 
 export function getUser(query: GetUserQuery) {
      logger.info("getUser");
@@ -35,7 +82,7 @@ export function getUser(query: GetUserQuery) {
 }
 
 export function createUser(
-     user: Pick<User, "name" | "email" | "password" | "permissions">
+     user: Pick<User, "name" | "email" | "password" | "permission">
 ) {
      logger.info("createUser");
      const newUser = { ...user, id: `${users.length + 1}` };
