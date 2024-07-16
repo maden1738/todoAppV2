@@ -5,19 +5,23 @@ import HttpStatusCode from "http-status-codes";
 import { BadRequestError } from "../errors/BadRequestError";
 import { GetUserQuery } from "../interface/user";
 
-export function getUser(
+export async function getUser(
      req: Request<any, any, any, GetUserQuery>,
      res: Response
 ) {
      const { query } = req;
-     const data = UserService.getUser(query);
+     const data = await UserService.getUser(query);
      res.status(HttpStatusCode.OK).json(data);
 }
 
-export function getUserById(req: Request, res: Response, next: NextFunction) {
+export async function getUserById(
+     req: Request,
+     res: Response,
+     next: NextFunction
+) {
      const { id } = req.params;
 
-     const data = UserService.getUserById(id);
+     const data = await UserService.getUserById(id);
 
      if (!data) {
           next(new BadRequestError(`User with id: ${id} not found`));

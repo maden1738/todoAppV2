@@ -5,14 +5,25 @@ import bcrypt from "bcrypt";
 
 const logger = loggerWithNameSpace("UserService");
 
-export function getUser(query: GetUserQuery) {
+export async function getUser(query: GetUserQuery) {
      logger.info("getUser");
-     return UserModel.getUser(query);
+
+     const data = await UserModel.UserModel.getUsers(query);
+
+     const count = await UserModel.UserModel.count(query);
+
+     const meta = {
+          page: query.page,
+          size: data.length,
+          total: +count.count,
+     };
+
+     return { data, meta };
 }
 
 export function getUserById(id: string) {
      logger.info("getUserById");
-     return UserModel.getUserById(id);
+     return UserModel.UserModel.getUserById(id);
 }
 
 export async function createUser(
@@ -39,7 +50,7 @@ export function getUserByEmail(email: string) {
 
 export async function updateUser(id: string, user: User) {
      logger.info("updateUser");
-     const data = UserModel.getUserById(id);
+     const data = await UserModel.UserModel.getUserById(id);
 
      if (!data) {
           return;
@@ -47,19 +58,19 @@ export async function updateUser(id: string, user: User) {
 
      if (user.password) {
           const password = await bcrypt.hash(user.password, 10);
-          return UserModel.updateUser(id, { ...user, password });
+          return await UserModel.UserModel.update(id, { ...user, password });
      }
 
-     return UserModel.updateUser(id, user);
+     return await UserModel.UserModel.update(id, user);
 }
 
 export function deleteUser(id: string) {
      logger.info("deleteUser");
-     const data = UserModel.getUserById(id);
+     const data = UserModel.UserModel.getUserById(id);
 
      if (!data) {
           return null;
      }
 
-     UserModel.deleteUser(id);
+     UserModel.UserModel.delete(id);
 }

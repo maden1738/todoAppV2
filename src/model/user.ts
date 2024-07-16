@@ -2,11 +2,68 @@ import { GetUserQuery, User } from "../interface/user";
 import { PERMISSION } from "../constants/permissions";
 import loggerWithNamespace from "../utils/logger";
 import { BaseModel } from "./base";
-import { permission } from "process";
 
 const logger = loggerWithNamespace("UserModel");
 
 export class UserModel extends BaseModel {
+     static async getUsers(query: GetUserQuery) {
+          const { q, size, page } = query;
+
+          const data = this.queryBuilder()
+               .table("users")
+               .join("permissions", "users.id", "=", "permissions.userId")
+               .select("users.id", "name", "email", "permission")
+               .limit(size)
+               .offset((page - 1) * size);
+
+          if (q) {
+               data.whereLike("name", `%${q}%`);
+          }
+
+          return data;
+     }
+
+     static async count(query: GetUserQuery) {
+          const { q } = query;
+
+          const data = this.queryBuilder()
+               .count("*")
+               .table("users")
+               .join("permissions", "users.id", "=", "permissions.userId")
+               .first();
+
+          if (q) {
+               data.whereLike("name", `%${q}%`);
+          }
+
+          return data;
+     }
+
+     static async getUserByEmail(email: string) {
+          const data = await this.queryBuilder()
+               .table("users")
+               .join("permissions", "users.id", "=", "permissions.userId")
+               .select("users.id", "name", "email", "password", "permission")
+               .where("email", email)
+               .first();
+
+          if (data.length > 0) {
+               return data[0];
+          }
+     }
+
+     static async getUserById(id: string) {
+          const data = await this.queryBuilder()
+               .table("users")
+               .join("permissions", "users.id", "=", "permissions.userId")
+               .select("users.id", "name", "email", "password", "permission")
+               .where("users.id", id);
+
+          if (data.length > 0) {
+               return data[0];
+          }
+     }
+
      static async create(
           user: Pick<User, "name" | "email" | "password" | "permission">,
           createdBy: string | null
@@ -26,7 +83,6 @@ export class UserModel extends BaseModel {
                     email: user.email,
                })
                .first();
-          console.log(user.permission);
 
           await this.queryBuilder()
                .insert({
@@ -48,6 +104,49 @@ export class UserModel extends BaseModel {
                )
                .where("users.id", userId.id)
                .first();
+     }
+
+     static async update(id: string, user: User) {
+          let updatedUser = {
+               updatedAt: new Date(),
+          };
+
+          if (user.name) {
+               updatedUser["name"] = user.name;
+          }
+
+          if (user.email) {
+               updatedUser["email"] = user.email;
+          }
+
+          if (user.password) {
+               updatedUser["password"] = user.password;
+          }
+
+          await this.queryBuilder()
+               .update(updatedUser)
+               .table("users")
+               .where({ id });
+
+          if (user.permission) {
+               await this.queryBuilder()
+                    .update({
+                         permission: user.permission,
+                    })
+                    .table("permissions")
+                    .where({ userId: id });
+          }
+
+          return await UserModel.getUserById(id);
+     }
+
+     static async delete(id: string) {
+          await this.queryBuilder()
+               .delete()
+               .table("permissions")
+               .where({ userId: id });
+
+          await this.queryBuilder().delete().table("users").where({ id });
      }
 }
 

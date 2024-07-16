@@ -80,10 +80,10 @@ export const updateUserBodySchema = Joi.object({
                return value;
           }),
 
-     permissions: Joi.array()
+     permission: Joi.string()
           .optional()
           .messages({
-               "array.base": "Permissions must be  an array ",
+               "string.base": "Permissions must be  string ",
           })
           .options({
                stripUnknown: true,
@@ -92,6 +92,25 @@ export const updateUserBodySchema = Joi.object({
 
 export const GetUserQuerySchema = Joi.object({
      q: Joi.string().optional(),
+     page: Joi.number()
+          .min(1)
+          .optional()
+          .messages({
+               "number.base": "page must be a number",
+               "number.min": "page must be greater than or equal to 1",
+          })
+          .default(1),
+
+     size: Joi.number()
+          .min(1)
+          .max(5)
+          .optional()
+          .messages({
+               "number.base": "page must be a number",
+               "number.min": "size must be greater than or equal to 1",
+               "number.max": "size must be less than or equal to 9",
+          })
+          .default(5),
 }).options({
      stripUnknown: true,
 });
