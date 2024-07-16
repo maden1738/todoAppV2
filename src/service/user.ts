@@ -32,7 +32,7 @@ export async function createUser(
 ) {
      logger.info("createUser");
 
-     const data = UserModel.getUserByEmail(user.email);
+     const data = await UserModel.UserModel.getUserByEmail(user.email);
 
      if (data) {
           return;
@@ -43,9 +43,9 @@ export async function createUser(
      return await UserModel.UserModel.create({ ...user, password }, createdBy);
 }
 
-export function getUserByEmail(email: string) {
+export async function getUserByEmail(email: string) {
      logger.info("getUserByEmail");
-     return UserModel.getUserByEmail(email);
+     return await UserModel.UserModel.getUserByEmail(email);
 }
 
 export async function updateUser(id: string, user: User) {

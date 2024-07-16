@@ -19,7 +19,7 @@ export async function signup(
 
 export async function login(body: Pick<User, "email" | "password">) {
      logger.info("Login");
-     const existingUser = getUserByEmail(body.email);
+     const existingUser = await getUserByEmail(body.email);
 
      if (!existingUser) {
           logger.info("Incorrect Email");

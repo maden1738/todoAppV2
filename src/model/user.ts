@@ -48,8 +48,7 @@ export class UserModel extends BaseModel {
                .table("users")
                .join("permissions", "users.id", "=", "permissions.userId")
                .select("users.id", "name", "email", "password", "permission")
-               .where("email", email)
-               .first();
+               .where("email", email);
 
           if (data.length > 0) {
                return data[0];
@@ -80,7 +79,7 @@ export class UserModel extends BaseModel {
                name: user.name,
                email: user.email,
                password: user.password,
-               createdBy: +createdBy,
+               createdBy: createdBy,
           };
 
           const [userId] = await this.queryBuilder()
@@ -178,7 +177,6 @@ export let users: User[] = [
 ];
 
 export function getUser(query: GetUserQuery) {
-     logger.info("getUser");
      const { q } = query;
      console.log(q);
      if (q) {
@@ -191,7 +189,6 @@ export function getUser(query: GetUserQuery) {
 export function createUser(
      user: Pick<User, "name" | "email" | "password" | "permission">
 ) {
-     logger.info("createUser");
      const newUser = { ...user, id: `${users.length + 1}` };
      users.push(newUser);
 
@@ -199,12 +196,10 @@ export function createUser(
 }
 
 export function getUserByEmail(email: string) {
-     logger.info("getUserByEmail");
      return users.find(({ email: userEmail }) => userEmail === email); // destructuring and renaming email to userEmail
 }
 
 export function updateUser(id: string, user: User) {
-     logger.info("updateUser");
      let updatedValue;
 
      users = users.map((userElement) =>
@@ -219,11 +214,9 @@ export function updateUser(id: string, user: User) {
 }
 
 export function getUserById(id: string) {
-     logger.info("getUserById");
      return users.find(({ id: userId }) => userId === id);
 }
 
 export function deleteUser(id: string) {
-     logger.info("deleteUser");
      users = users.filter((user) => user.id !== id);
 }
