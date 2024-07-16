@@ -1,5 +1,93 @@
 import { Todo } from "../interface/todos";
 import loggerWithNamespace from "../utils/logger";
+import { BaseModel } from "./base";
+
+const logger = loggerWithNamespace("TodosModel");
+
+export class TodosModel extends BaseModel {
+     static async getTodos(userId: string) {
+          logger.info("getTodos");
+
+          const data = this.queryBuilder()
+               .table("todos")
+               .select("id", "todo", "dueDate")
+               .where({
+                    createdBy: +userId,
+               });
+
+          return data;
+     }
+
+     static async getTodoById(id: string, userId: string) {
+          logger.info("getTodoById");
+
+          const data = await this.queryBuilder()
+               .table("todos")
+               .select("id", "todo", "dueDate")
+               .where({ id })
+               .where({ createdBy: userId });
+
+          if (data.length > 0) {
+               return data[0];
+          }
+     }
+
+     static async create(body: Todo, userId: string) {
+          logger.info("createTodo");
+
+          const todoToCreate = {
+               todo: body.todo,
+               status: body.status,
+               dueDate: body.dueDate,
+               createdBy: userId,
+          };
+
+          const [id] = await this.queryBuilder()
+               .insert(todoToCreate)
+               .table("todos")
+               .returning("id");
+
+          return await this.queryBuilder()
+               .table("todos")
+               .select("todo", "status", "dueDate", "createdBy")
+               .where({ id: id.id })
+               .first();
+     }
+
+     static async update(id: string, todo: Todo) {
+          logger.info("updateTodo");
+          let todoToUpdate = {
+               updatedAt: new Date(),
+          };
+
+          if (todo.todo) {
+               todoToUpdate["todo"] = todo.todo;
+          }
+
+          if (todo.status) {
+               todoToUpdate["status"] = todo.status;
+          }
+
+          if (todo.dueDate) {
+               todoToUpdate["dueDate"] = todo.dueDate;
+          }
+
+          await this.queryBuilder()
+               .update(todoToUpdate)
+               .table("todos")
+               .where({ id });
+
+          return await this.queryBuilder()
+               .table("todos")
+               .select("todo", "status", "dueDate", "createdBy")
+               .where({ id })
+               .first();
+     }
+
+     static async delete(id: string) {
+          await this.queryBuilder().delete().table("todos").where({ id });
+     }
+}
 
 export let todos = [
      {
@@ -24,8 +112,6 @@ export let todos = [
           createdBy: "3",
      },
 ];
-
-const logger = loggerWithNamespace("TodosModel");
 
 export function getTodos(userId: string) {
      logger.info("getTodos");

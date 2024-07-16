@@ -7,36 +7,36 @@ const logger = loggerWithNameSpace("TodosServices");
 export function getTodos(userId: string) {
      logger.info("getTodos");
 
-     const data = TodosModel.getTodos(userId);
+     const data = TodosModel.TodosModel.getTodos(userId);
      return data;
 }
 
 export function getTodoById(id: string, userId: string) {
      logger.info("getTodosById");
-     const data = TodosModel.getTodoById(id, userId);
+     const data = TodosModel.TodosModel.getTodoById(id, userId);
      if (data) {
           return data;
      }
 }
 
-export function createTodos(body: Todo, userId: string) {
+export async function createTodos(body: Todo, userId: string) {
      logger.info("createTodos");
-     return TodosModel.createTodos(body, userId);
+     return await TodosModel.TodosModel.create(body, userId);
 }
 
-export function updateTodo(id: string, body: Todo, userId: string) {
+export async function updateTodo(id: string, body: Todo, userId: string) {
      logger.info("updateTodo");
-     const data = TodosModel.getTodoById(id, userId);
+     const data = TodosModel.TodosModel.getTodoById(id, userId);
      if (data) {
-          return TodosModel.updateTodo(id, body);
+          return await TodosModel.TodosModel.update(id, body);
      }
 }
 
-export function deleteTodo(id: string, userId: string) {
+export async function deleteTodo(id: string, userId: string) {
      logger.info("deleteTodo");
-     const data = TodosModel.getTodoById(id, userId);
+     const data = await TodosModel.TodosModel.getTodoById(id, userId);
      if (!data) {
           return null;
      }
-     TodosModel.deleteTodo(id);
+     await TodosModel.TodosModel.delete(id);
 }

@@ -7,6 +7,8 @@ const logger = loggerWithNamespace("UserModel");
 
 export class UserModel extends BaseModel {
      static async getUsers(query: GetUserQuery) {
+          logger.info("getUsers");
+
           const { q, size, page } = query;
 
           const data = this.queryBuilder()
@@ -40,6 +42,8 @@ export class UserModel extends BaseModel {
      }
 
      static async getUserByEmail(email: string) {
+          logger.info("getUserByEmail");
+
           const data = await this.queryBuilder()
                .table("users")
                .join("permissions", "users.id", "=", "permissions.userId")
@@ -53,6 +57,8 @@ export class UserModel extends BaseModel {
      }
 
      static async getUserById(id: string) {
+          logger.info("getUserById");
+
           const data = await this.queryBuilder()
                .table("users")
                .join("permissions", "users.id", "=", "permissions.userId")
@@ -68,6 +74,8 @@ export class UserModel extends BaseModel {
           user: Pick<User, "name" | "email" | "password" | "permission">,
           createdBy: string | null
      ) {
+          logger.info("createUser");
+
           const userToCreate = {
                name: user.name,
                email: user.email,
@@ -75,14 +83,10 @@ export class UserModel extends BaseModel {
                createdBy: +createdBy,
           };
 
-          await this.queryBuilder().insert(userToCreate).table("users");
-          const userId = await this.queryBuilder()
-               .select("id")
+          const [userId] = await this.queryBuilder()
+               .insert(userToCreate)
                .table("users")
-               .where({
-                    email: user.email,
-               })
-               .first();
+               .returning("id");
 
           await this.queryBuilder()
                .insert({
@@ -107,24 +111,26 @@ export class UserModel extends BaseModel {
      }
 
      static async update(id: string, user: User) {
-          let updatedUser = {
+          logger.info("update");
+
+          let userToUpdate = {
                updatedAt: new Date(),
           };
 
           if (user.name) {
-               updatedUser["name"] = user.name;
+               userToUpdate["name"] = user.name;
           }
 
           if (user.email) {
-               updatedUser["email"] = user.email;
+               userToUpdate["email"] = user.email;
           }
 
           if (user.password) {
-               updatedUser["password"] = user.password;
+               userToUpdate["password"] = user.password;
           }
 
           await this.queryBuilder()
-               .update(updatedUser)
+               .update(userToUpdate)
                .table("users")
                .where({ id });
 
@@ -141,6 +147,8 @@ export class UserModel extends BaseModel {
      }
 
      static async delete(id: string) {
+          logger.info("deleteUser");
+
           await this.queryBuilder()
                .delete()
                .table("permissions")
