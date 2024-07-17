@@ -157,66 +157,66 @@ export class UserModel extends BaseModel {
      }
 }
 
-export let users: User[] = [
-     {
-          name: "user1",
-          email: "user1@g.com",
-          password:
-               "$2b$10$N5zpXnpAd9yqwebahVEYHeT2APESXkefOkCLwb3484TLirasXMDqe",
-          id: "1",
-          permission: PERMISSION.SUPER_ADMIN,
-     },
-     {
-          name: "user2",
-          email: "user2@g.com",
-          password:
-               "$2b$10$N5zpXnpAd9yqwebahVEYHeT2APESXkefOkCLwb3484TLirasXMDqe",
-          id: "2",
-          permission: PERMISSION.USER,
-     },
-];
+// export let users: User[] = [
+//      {
+//           name: "user1",
+//           email: "user1@g.com",
+//           password:
+//                "$2b$10$N5zpXnpAd9yqwebahVEYHeT2APESXkefOkCLwb3484TLirasXMDqe",
+//           id: "1",
+//           permission: PERMISSION.SUPER_ADMIN,
+//      },
+//      {
+//           name: "user2",
+//           email: "user2@g.com",
+//           password:
+//                "$2b$10$N5zpXnpAd9yqwebahVEYHeT2APESXkefOkCLwb3484TLirasXMDqe",
+//           id: "2",
+//           permission: PERMISSION.USER,
+//      },
+// ];
 
-export function getUser(query: GetUserQuery) {
-     const { q } = query;
-     console.log(q);
-     if (q) {
-          return users.filter(({ name }) => name.includes(q));
-     }
+// export function getUser(query: GetUserQuery) {
+//      const { q } = query;
+//      console.log(q);
+//      if (q) {
+//           return users.filter(({ name }) => name.includes(q));
+//      }
 
-     return users;
-}
+//      return users;
+// }
 
-export function createUser(
-     user: Pick<User, "name" | "email" | "password" | "permission">
-) {
-     const newUser = { ...user, id: `${users.length + 1}` };
-     users.push(newUser);
+// export function createUser(
+//      user: Pick<User, "name" | "email" | "password" | "permission">
+// ) {
+//      const newUser = { ...user, id: `${users.length + 1}` };
+//      users.push(newUser);
 
-     return newUser;
-}
+//      return newUser;
+// }
 
-export function getUserByEmail(email: string) {
-     return users.find(({ email: userEmail }) => userEmail === email); // destructuring and renaming email to userEmail
-}
+// export function getUserByEmail(email: string) {
+//      return users.find(({ email: userEmail }) => userEmail === email); // destructuring and renaming email to userEmail
+// }
 
-export function updateUser(id: string, user: User) {
-     let updatedValue;
+// export function updateUser(id: string, user: User) {
+//      let updatedValue;
 
-     users = users.map((userElement) =>
-          userElement.id !== id
-               ? userElement
-               : (updatedValue = {
-                      ...userElement,
-                      ...user,
-                 })
-     );
-     return updatedValue;
-}
+//      users = users.map((userElement) =>
+//           userElement.id !== id
+//                ? userElement
+//                : (updatedValue = {
+//                       ...userElement,
+//                       ...user,
+//                  })
+//      );
+//      return updatedValue;
+// }
 
-export function getUserById(id: string) {
-     return users.find(({ id: userId }) => userId === id);
-}
+// export function getUserById(id: string) {
+//      return users.find(({ id: userId }) => userId === id);
+// }
 
-export function deleteUser(id: string) {
-     users = users.filter((user) => user.id !== id);
-}
+// export function deleteUser(id: string) {
+//      users = users.filter((user) => user.id !== id);
+// }

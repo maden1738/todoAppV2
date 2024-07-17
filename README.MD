@@ -14,6 +14,6 @@
 
 6. Data validation using JOI
 
-7. Unit Testing for all the services
+7. PostgreSql DataBase
 
-8. Integration Test for all routes
+8. Knex Integration
